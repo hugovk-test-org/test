@@ -6,8 +6,11 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  FORCE_COLOR: 1
+
 jobs:
-  build:
+  test:
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -68,3 +71,11 @@ jobs:
         if: "startsWith(matrix.os, 'windows')"
         run: |
           python -m pip cache dir > NUL
+
+  success:
+    needs: test
+    runs-on: ubuntu-latest
+    name: Test successful
+    steps:
+      - name: Success
+        run: echo Test successful
